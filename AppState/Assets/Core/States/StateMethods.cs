@@ -26,7 +26,7 @@ namespace OneDay.Example
         public IEnumerator EnterBoot()
         {
             Debug.Log("EnterBoot");
-            yield return new WaitForSeconds(10.0f);
+            yield return new WaitForSeconds(1.0f);
         }
 
         public IEnumerator LeaveBoot()
