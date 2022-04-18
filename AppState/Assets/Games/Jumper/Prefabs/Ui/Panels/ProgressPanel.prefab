@@ -33,10 +33,10 @@ RectTransform:
   m_Father: {fileID: 1019138104177201073}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 394, y: 134}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1019138104177201074
 GameObject:
@@ -97,9 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 747ba0075284454aa0316990abc078e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showByDefault: 1
-  showBehaviour: {fileID: 0}
-  hideBehaviour: {fileID: 0}
+  showByDefault: 0
+  showBehaviour: {fileID: 11400000, guid: 98a3227421906874ca0d1d5883954909, type: 2}
+  hideBehaviour: {fileID: 11400000, guid: bd83fd3cc3b180d468d924ff264c88ba, type: 2}
+  behaviourTarget: {fileID: 1019138103409432993}
   root: {fileID: 1019138103409432994}
   playerProgress: {fileID: 3839949863744951992}
   enemyProgress: {fileID: 7205899034844611643}

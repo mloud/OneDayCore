@@ -63,7 +63,8 @@ namespace OneDay.Games.Jumper
             yield return new WaitForSeconds(0.5f);
             startCam.enabled = false;
             yield return new WaitForSeconds(1.5f);
-            
+
+            StartCoroutine(ui.ProgressPanel.Show());
             
             // start running player
             DOTween.To(() => playerInput.MoveValue, (value) => playerInput.MoveValue = value, 1.0f, 1.0f)
@@ -123,6 +124,7 @@ namespace OneDay.Games.Jumper
         {
             winCam.enabled = true;
             yield return catcher.Vanish();
+            yield return ui.ProgressPanel.Hide();
             yield return new WaitForSeconds(1.0f);
 
             ODApp.Instance.ManagerHub.Get<StateManager>().Trigger("StartGame");
@@ -131,6 +133,7 @@ namespace OneDay.Games.Jumper
         private IEnumerator DoLevelFailed()
         {
             yield return new WaitForSeconds(1.0f);
+            yield return ui.ProgressPanel.Hide();
             var transposer = playerCam.GetCinemachineComponent<CinemachineFramingTransposer>();
             yield return DOTween
                 .To(() => transposer.m_ScreenX, (v) => transposer.m_ScreenX = v, 0.5f, 2.0f)
