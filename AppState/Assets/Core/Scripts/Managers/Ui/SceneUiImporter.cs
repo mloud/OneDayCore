@@ -42,8 +42,11 @@ namespace OneDay.Core.Ui
             var importedPanels = new List<Transform>();
             foreach(Transform panel in sourcePanelContainer)
             {
-                panel.SetParent(targetPanelContainer);
                 importedPanels.Add(panel);
+            }
+            foreach (var importedPanel in importedPanels)
+            {
+                importedPanel.SetParent(targetPanelContainer);
             }
             return importedPanels;
         }
@@ -53,8 +56,12 @@ namespace OneDay.Core.Ui
             var importedDialogs = new List<Transform>();
             foreach(Transform panel in sourceDialogContainer)
             {
-                panel.SetParent(targetDialogContainer);
                 importedDialogs.Add(panel);
+            }
+            
+            foreach (var importedDialog in importedDialogs)
+            {
+                importedDialog.SetParent(targetDialogContainer);
             }
             return importedDialogs;
         }

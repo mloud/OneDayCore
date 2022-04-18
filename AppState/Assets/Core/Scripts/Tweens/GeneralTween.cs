@@ -6,7 +6,16 @@ namespace OneDay.Core.Tweens
     public class GeneralTween : PlayableMono
     {
         public TweenConfig Config;
-        
+        public bool PlayOnEnable;
+
+        private void OnEnable()
+        {
+            if (PlayOnEnable)
+            {
+                Play();
+            }
+        }
+
         public override void Play(Action onFinished, Object context = null)
         {
             TweenRunner.Run(Config, onFinished, context);

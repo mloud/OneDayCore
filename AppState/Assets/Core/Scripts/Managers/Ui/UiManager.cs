@@ -48,6 +48,10 @@ namespace OneDay.Core.Ui
         
         public IEnumerator Show(string id, KeyValueData data, Action onHide = null)
         {
+            D.Assert(
+                defaultUiContainer.DialogContainer.Find(id) != null || defaultUiContainer.PanelContainer.Find(id) != null, $"No such object with id {id} found");
+            
+            
             var dialog = defaultUiContainer.DialogContainer.Find(id);
             if (dialog != null)
                 yield return StartCoroutine(dialog.GetComponent<IShowable>().Show(data, onHide));
