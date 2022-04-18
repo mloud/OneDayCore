@@ -21,6 +21,19 @@ namespace OneDay.Core.Ui
                 }
             }
 
+            if (source.DialogContainer != null)
+            {
+                if (target.DialogContainer != null)
+                {
+                    var dialogs = ImportDialogs(source.DialogContainer, target.DialogContainer);
+                    importedUi.AddRange(dialogs);
+                }
+                else
+                {
+                    Debug.LogError($"Target dialog container in scene ui container {target.Name} not found");
+                }
+            }
+           
             return importedUi;
         }
 
@@ -33,6 +46,17 @@ namespace OneDay.Core.Ui
                 importedPanels.Add(panel);
             }
             return importedPanels;
+        }
+        
+        private List<Transform> ImportDialogs(Transform sourceDialogContainer, Transform targetDialogContainer)
+        {
+            var importedDialogs = new List<Transform>();
+            foreach(Transform panel in sourceDialogContainer)
+            {
+                panel.SetParent(targetDialogContainer);
+                importedDialogs.Add(panel);
+            }
+            return importedDialogs;
         }
     }
 }

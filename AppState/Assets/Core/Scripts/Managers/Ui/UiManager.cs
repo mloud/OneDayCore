@@ -33,6 +33,19 @@ namespace OneDay.Core.Ui
             SceneManager.sceneUnloaded -= OnSceneUnloaded;
         }
 
+        public T Get<T>(string id) 
+        {
+            var dialog = defaultUiContainer.DialogContainer.Find(id);
+            if (dialog != null)
+                return dialog.GetComponent<T>();
+
+            var panel = defaultUiContainer.PanelContainer.Find(id);
+            if (panel != null)
+                return panel.GetComponent<T>();
+
+            return default;
+        }
+        
         public IEnumerator Show(string id, KeyValueData data, Action onHide = null)
         {
             var dialog = defaultUiContainer.DialogContainer.Find(id);

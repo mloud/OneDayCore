@@ -69,6 +69,7 @@ namespace OneDay.Core.States
                     SceneManager.LoadScene(CurrentState.SceneToLoad);
                 }
 
+                yield return new WaitForEndOfFrame();
                 if (stateMethodListener != null)
                 {
                     D.Info($"Starting enter method in state {CurrentState.Name}");
