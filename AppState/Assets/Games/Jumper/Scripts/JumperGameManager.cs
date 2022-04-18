@@ -4,6 +4,7 @@ using Cinemachine;
 using DG.Tweening;
 using OneDay.Core;
 using OneDay.Core.States;
+using OneDay.Core.Ui;
 using OneDay.Games.Jumper.Ui;
 using UnityEngine;
 
@@ -57,14 +58,18 @@ namespace OneDay.Games.Jumper
             catcher.Speed = 0;
             
             ui.ProgressPanel.Set(0,0);
-            
+            ui.StagePanel.SetStage(1);
             
             // wait
             yield return new WaitForSeconds(0.5f);
             startCam.enabled = false;
-            yield return new WaitForSeconds(1.5f);
-
+            yield return ODApp.Instance.ManagerHub.Get<UiManager>().Show(
+                "CountDownDialog", 
+                KeyValueData.Create().Add("from", 3).Add("delay", 0.75f));
+            yield return new WaitForSeconds(3.0f);
+            
             StartCoroutine(ui.ProgressPanel.Show());
+            StartCoroutine(ui.StagePanel.Show());
             
             // start running player
             DOTween.To(() => playerInput.MoveValue, (value) => playerInput.MoveValue = value, 1.0f, 1.0f)
@@ -125,15 +130,24 @@ namespace OneDay.Games.Jumper
             winCam.enabled = true;
             yield return catcher.Vanish();
             yield return ui.ProgressPanel.Hide();
+            yield return ui.StagePanel.Hide();
+
+            yield return ODApp.Instance.ManagerHub.Get<UiManager>()
+                .Show(
+                    "StageClearDialog", 
+                    KeyValueData.Create().Add<Action>(
+                        "claim", 
+                        ()=>ODApp.Instance.ManagerHub.Get<StateManager>().Trigger("StartGame")));
             yield return new WaitForSeconds(1.0f);
 
-            ODApp.Instance.ManagerHub.Get<StateManager>().Trigger("StartGame");
+        
         }
         
         private IEnumerator DoLevelFailed()
         {
             yield return new WaitForSeconds(1.0f);
             yield return ui.ProgressPanel.Hide();
+            yield return ui.StagePanel.Hide();
             var transposer = playerCam.GetCinemachineComponent<CinemachineFramingTransposer>();
             yield return DOTween
                 .To(() => transposer.m_ScreenX, (v) => transposer.m_ScreenX = v, 0.5f, 2.0f)

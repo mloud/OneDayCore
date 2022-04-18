@@ -23,6 +23,7 @@ namespace OneDay.Games.Jumper
         private Animator animator;
         private float ySpeed;
         private bool running;
+        private bool finished;
         protected override void Awake()
         {
             base.Awake();
@@ -73,11 +74,12 @@ namespace OneDay.Games.Jumper
 
         private void OnTriggerEnter(Collider collision)
         {
-            if (!running)
+            if (finished)
                 return;
             
             if (collision.transform.name == "EndTrigger")
             {
+                finished = true;
                 PlayWinSequence();
                 OnFinished?.Invoke();
             }
