@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92d757b6e6424c478b4392bb5b8c2a1a, type: 3}
+  m_Name: LevelGeneratorSettings
+  m_EditorClassIdentifier: 
+  WallPrefabs:
+  - {fileID: 7779381877309823848, guid: 2f6c4572e07a60b43b00e1c4f489a806, type: 3}
+  ObstaclePrefabs:
+  - {fileID: 4683796414641174734, guid: b65bc9b7f90b6bc4aa709c39417a0250, type: 3}
+  - {fileID: 1828442538862224868, guid: 4d6851db38dccce42a36117cd1fd3dd7, type: 3}
+  - {fileID: 5121306440514110880, guid: f083097079f7cfd42be8d5e69dc04e1f, type: 3}
+  - {fileID: 7510906846092214023, guid: 569a83f31a186c74ab15de9b8b3eb7df, type: 3}
+  - {fileID: 7267074666481259944, guid: 6b710f5e2219875418cf9e4f35be738d, type: 3}
+  GroundPrefabs:
+  - {fileID: 916917378494744782, guid: 98f5378049f9b5745a77677f581b32b1, type: 3}
+  PickablePrefabs:
+  - {fileID: 1594879466734162, guid: c82411508e9628b4e9f629bf2800542f, type: 3}
+  EndTriggerPrefab: {fileID: 6112325591547262251, guid: 9d3697471763f52439947d57f746ff03, type: 3}
+  FirstObstacleDistance: 5
