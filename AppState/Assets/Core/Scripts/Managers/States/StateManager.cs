@@ -18,13 +18,19 @@ namespace OneDay.Core.States
             Debug.Assert(!string.IsNullOrEmpty(flow.InitialState), "Initial state is empty");
             Debug.Assert(flow.GetState(flow.InitialState) != null, $"Initial state {flow.InitialState} not found");
 
-            StartCoroutine(Trigger("start"));
+            StartCoroutine(TriggerCoroutine("start"));
         }
 
-        public IEnumerator Trigger(string triggerName)
+        public void Trigger(string triggerName)
         {
-            Debug.Assert(!IsTransiting, $"Transition in progress when trigerring {triggerName}");
-
+            StartCoroutine(TriggerCoroutine(triggerName));
+        }
+        
+        private IEnumerator TriggerCoroutine(string triggerName)
+        {
+            Debug.Assert(!IsTransiting, $"Transition in progress when triggering {triggerName}");
+            
+            D.Info($"Triggering trigger {triggerName}");
             Transition transition = null;
             
             if (triggerName == "start")
@@ -46,7 +52,11 @@ namespace OneDay.Core.States
 
                 if (CurrentState != null)
                 {
-                    yield return stateMethodListener.StartCoroutine(CurrentState.OnLeaveMethodName);
+                    if (stateMethodListener != null)
+                    {
+                        D.Info($"Starting leave method in state {CurrentState.Name}");
+                        yield return stateMethodListener.StartCoroutine(CurrentState.OnLeaveMethodName);
+                    }
                 }
                 
                 var nextState = flow.GetState(transition.NextState);
@@ -55,20 +65,27 @@ namespace OneDay.Core.States
 
                 if (!string.IsNullOrEmpty(CurrentState.SceneToLoad))
                 {
+                    D.Info($"Loading scene {CurrentState.SceneToLoad} when entering state {CurrentState.Name}");
                     SceneManager.LoadScene(CurrentState.SceneToLoad);
                 }
 
-                yield return stateMethodListener.StartCoroutine(CurrentState.OnEnterMethodName);
+                if (stateMethodListener != null)
+                {
+                    D.Info($"Starting enter method in state {CurrentState.Name}");
+                    yield return stateMethodListener.StartCoroutine(CurrentState.OnEnterMethodName);
+                }
+
                 IsTransiting = false;
 
                 if (!string.IsNullOrEmpty(CurrentState.OnEnterFinishedTrigger))
                 {
+                    D.Info($"Assigning automatic leave trigger when finishing enter method in state {CurrentState.Name}");
                     ActiveTrigger = CurrentState.OnEnterFinishedTrigger;
                 }
             }
             else
             {
-                Debug.LogError($"No transition from current state {CurrentState} through trigger {triggerName}");
+                D.Error($"No transition from current state {CurrentState} through trigger {triggerName}");
             }
         }
 
@@ -76,7 +93,8 @@ namespace OneDay.Core.States
         {
             if (ActiveTrigger != null)
             {
-                StartCoroutine(Trigger(ActiveTrigger));
+                D.Info($"New trigger {ActiveTrigger} detected - starting Trigger new state sequence");
+                StartCoroutine(TriggerCoroutine(ActiveTrigger));
                 ActiveTrigger = null;
             }
         }
