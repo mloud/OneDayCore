@@ -6,11 +6,15 @@ namespace OneDay.Core.Tweens
 {
     public abstract class ABaseTween : IPlayable
     {
+        [SerializeField] private string id;
         [SerializeField] private bool noOtherTweenPlaying;
         [SerializeField] private bool playOnEnable;
         [SerializeField] private float delay;
         [SerializeField] protected float time = 0.3f;
+        [SerializeField] private int loop = 1;
+        [SerializeField] private LoopType loopType = LoopType.Incremental;
 
+        private Sequence sequence;
         public override void Play()
         {
             if (!noOtherTweenPlaying || !DOTween.IsTweening(gameObject))
@@ -31,10 +35,15 @@ namespace OneDay.Core.Tweens
 
         private void InternalPlay(Action onFinished)
         {
-            var sequence = DOTween.Sequence();
+            sequence = DOTween.Sequence();
             sequence.AppendInterval(delay);
             CustomInternalPlay(sequence);
-            sequence.onComplete += () => onFinished?.Invoke();
+            sequence.onComplete += () =>
+            {
+                sequence = null;
+                onFinished?.Invoke();
+            };
+            sequence.SetLoops(loop, loopType);
         }
 
         private void OnEnable()
@@ -43,6 +52,11 @@ namespace OneDay.Core.Tweens
             {
                 InternalPlay(null);
             }
+        }
+
+        private void OnDestroy()
+        {
+            sequence?.Kill();
         }
     }
 }

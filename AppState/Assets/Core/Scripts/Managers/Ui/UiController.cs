@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace OneDay.Core.Ui
 {
+    public abstract class UiController : UiController<NoUiView>
+    { }
+
     public abstract class UiController<T> : InjectableMono, IShowable where T: UiView
     {
         [SerializeField] bool showByDefault;

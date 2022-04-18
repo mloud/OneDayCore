@@ -3,17 +3,15 @@ using DG.Tweening;
 
 namespace OneDay.Core.Tweens
 {
-    public class ScaleTween : ABaseTween
+    public class RotatorTween : ABaseTween
     {
-        [SerializeField] Vector3 fromScale;
-        [SerializeField] Vector3 toScale;
+        [SerializeField] Vector3 targetRotation;
         [SerializeField] Ease easeType = Ease.Linear;
 
         protected override void CustomInternalPlay(Sequence sequence)
         {
             sequence.Append(transform
-                .DOScale(toScale, time)
-                .From(fromScale)
+                .DOLocalRotate(targetRotation, time)
                 .SetEase(easeType));
         }
     }

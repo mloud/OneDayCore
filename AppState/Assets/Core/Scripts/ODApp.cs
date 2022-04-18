@@ -14,6 +14,7 @@ namespace OneDay.Core
 
         protected override void Awake()
         {
+            D.Info("Starting ODAPP");
             Debug.Assert(Instance == null, $"Instance already exists");
             Instance = this;
             DontDestroyOnLoad(gameObject);

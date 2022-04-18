@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace OneDay.Core
 {
@@ -11,8 +12,21 @@ namespace OneDay.Core
         {
             base.Awake();
 
-            DontDestroyOnLoad(Manager.gameObject);
+            if (dontDestroy)
+            {
+                DontDestroyOnLoad(Manager.gameObject);
+            }
+
             ODApp.Instance.ManagerHub.Register(Manager);
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            if (!dontDestroy)
+            {
+                ODApp.Instance.ManagerHub.Unregister(Manager);     
+            }
         }
     }
 }

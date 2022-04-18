@@ -27,5 +27,12 @@ namespace OneDay.Core
             managers.Add(manager);
             manager.Initialize();
         }
+        
+        public void Unregister(ABaseManager manager)
+        {
+            Debug.Assert(Get(manager.GetType()) != null, $"Manager with type {manager.GetType()} is not registered");
+            managers.Remove(manager);
+            manager.Release();
+        }
     }
 }

@@ -84,11 +84,19 @@ namespace OneDay.Core.Ui
 
         private void DeleteSceneUi(Scene scene)
         {
-            foreach(var tr in importedSceneUi[scene.name])
+            if (importedSceneUi.TryGetValue(scene.name, out var sceneTransform))
             {
-                Destroy(tr.gameObject);
+                D.Info($"Scene {scene.name} DOES contain ui that will be deleted");
+                foreach(var tr in sceneTransform)
+                {
+                    Destroy(tr.gameObject);
+                }
+                importedSceneUi.Remove(scene.name);
             }
-            importedSceneUi.Remove(scene.name);
+            else
+            {
+                D.Info($"Scene {scene.name} does not contain any ui to delete");
+            }
         }
     }
 }
