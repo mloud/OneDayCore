@@ -1,11 +1,11 @@
 ﻿using System;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace OneDay.Core
 {
-    public abstract class IPlayable : MonoBehaviour
+    public interface IPlayable
     {
-        public abstract void Play(Action onFinished);
-        public abstract void Play();
+        void Play(Object context = null);
+        void Play(Action onFinished, Object context = null);
     }
 }

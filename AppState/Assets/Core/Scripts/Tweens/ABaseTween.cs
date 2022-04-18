@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using System;
+using Object = UnityEngine.Object;
 
 namespace OneDay.Core.Tweens
 {
-    public abstract class ABaseTween : IPlayable
+    public abstract class ABaseTween : PlayableMono
     {
         [SerializeField] private string id;
         [SerializeField] private bool noOtherTweenPlaying;
@@ -15,7 +16,7 @@ namespace OneDay.Core.Tweens
         [SerializeField] private LoopType loopType = LoopType.Incremental;
 
         private Sequence sequence;
-        public override void Play()
+        public override void Play(Object context = null)
         {
             if (!noOtherTweenPlaying || !DOTween.IsTweening(gameObject))
             {
@@ -23,7 +24,7 @@ namespace OneDay.Core.Tweens
             }
         }
 
-        public override void Play(Action onFinished = null)
+        public override void Play(Action onFinished,  Object context = null)
         {
             if (!noOtherTweenPlaying || !DOTween.IsTweening(gameObject))
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using OneDay.Core.Tweens;
 using UnityEngine;
 
 namespace OneDay.Core.Ui
@@ -10,8 +11,8 @@ namespace OneDay.Core.Ui
     public abstract class UiController<T> : InjectableMono, IShowable where T: UiView
     {
         [SerializeField] bool showByDefault;
-        [SerializeField] IPlayable showBehaviour;
-        [SerializeField] IPlayable hideBehaviour;
+        [SerializeField] PlayableSO showBehaviour;
+        [SerializeField] PlayableSO hideBehaviour;
         [SerializeField] GameObject root;
         protected T View { get; private set; }
 
@@ -43,7 +44,7 @@ namespace OneDay.Core.Ui
                 {
                     finished = true;
                     root.SetActive(false);
-                });
+                }, transform);
                 yield return new WaitUntil(() => finished);
             }
             else
@@ -63,7 +64,7 @@ namespace OneDay.Core.Ui
             {
                 bool finished = false;
                 root.SetActive(true);
-                showBehaviour.Play(() => finished = true);
+                showBehaviour.Play(() => finished = true, transform);
                 yield return new WaitUntil(() => finished);
             }
             else
