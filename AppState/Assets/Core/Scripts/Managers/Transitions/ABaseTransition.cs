@@ -17,7 +17,11 @@ namespace OneDay.Core.Effects
 
         public IEnumerator Show(string text, bool skipAnimation)
         {
-            label.text = text;
+            if (label != null)
+            {
+                label.text = text;
+            }
+
             if (!skipAnimation)
             {
                 yield return StartCoroutine(CustomShow());

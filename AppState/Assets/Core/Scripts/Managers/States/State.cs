@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace OneDay.Core.States
 {
@@ -12,7 +11,8 @@ namespace OneDay.Core.States
         public string SceneToLoad;
         public string OnEnterMethodName;
         public string OnLeaveMethodName;
-        public string OnEnterFinishedTrigger; 
+        public string OnEnterFinishedTrigger;
+        public string OnLeaveTransition;
         public List<Transition> Transitions;
     }
 }

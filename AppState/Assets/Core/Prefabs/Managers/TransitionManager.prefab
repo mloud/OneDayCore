@@ -56,7 +56,7 @@ MonoBehaviour:
   clickShow: 0
   clickHide: 0
   image: {fileID: 7683660309679227859}
-  duration: 0.3
+  duration: 0.6
 --- !u!222 &7683660309679227858
 CanvasRenderer:
   m_ObjectHideFlags: 0

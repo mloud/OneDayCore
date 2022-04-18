@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using OneDay.Core.Effects;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -56,6 +57,11 @@ namespace OneDay.Core.States
                     {
                         D.Info($"Starting leave method in state {CurrentState.Name}");
                         yield return stateMethodListener.StartCoroutine(CurrentState.OnLeaveMethodName);
+
+                        if (!string.IsNullOrEmpty(CurrentState.OnLeaveTransition))
+                        {
+                            yield return ODApp.Instance.ManagerHub.Get<TransitionManager>().Show(CurrentState.OnLeaveTransition);
+                        }
                     }
                 }
                 
@@ -76,6 +82,9 @@ namespace OneDay.Core.States
                     yield return stateMethodListener.StartCoroutine(CurrentState.OnEnterMethodName);
                 }
 
+                yield return ODApp.Instance.ManagerHub.Get<TransitionManager>().Hide();
+
+                
                 IsTransiting = false;
 
                 if (!string.IsNullOrEmpty(CurrentState.OnEnterFinishedTrigger))
