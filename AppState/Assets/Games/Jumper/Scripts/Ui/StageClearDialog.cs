@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using OneDay.Core;
 using OneDay.Core.Ui;
 using TMPro;
@@ -15,7 +16,13 @@ namespace OneDay.Games.Jumper.Ui
         protected override void OnShow(KeyValueData data)
         {
             claimButton.onClick.RemoveAllListeners();
-            claimButton.onClick.AddListener(()=>data.Get<Action>("claim").Invoke());
+            claimButton.onClick.AddListener(()=>StartCoroutine(OnClaim(data.Get<Action>("claim"))));
+        }
+
+        private IEnumerator OnClaim(Action claimAction)
+        {
+            claimAction.Invoke();
+            yield break;
         }
     }
 }

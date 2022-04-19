@@ -137,10 +137,7 @@ namespace OneDay.Games.Jumper
                     "StageClearDialog", 
                     KeyValueData.Create().Add<Action>(
                         "claim", 
-                        ()=>ODApp.Instance.ManagerHub.Get<StateManager>().Trigger("StartGame")));
-            yield return new WaitForSeconds(1.0f);
-
-        
+                        ()=>ODApp.Instance.ManagerHub.Get<StateManager>().Trigger("StartMenu")));
         }
         
         private IEnumerator DoLevelFailed()
@@ -152,8 +149,13 @@ namespace OneDay.Games.Jumper
             yield return DOTween
                 .To(() => transposer.m_ScreenX, (v) => transposer.m_ScreenX = v, 0.5f, 2.0f)
                 .WaitForCompletion();
-            yield return new WaitForSeconds(1.0f);
-            ODApp.Instance.ManagerHub.Get<StateManager>().Trigger("StartGame");
+            
+            yield return ODApp.Instance.ManagerHub.Get<UiManager>()
+                .Show(
+                    "StageFailedDialog", 
+                    KeyValueData.Create().Add<Action>(
+                        "confirm", 
+                        ()=>ODApp.Instance.ManagerHub.Get<StateManager>().Trigger("StartMenu")));
         }
     }
 }

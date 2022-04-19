@@ -16,7 +16,8 @@ MonoBehaviour:
   SceneToLoad: 
   OnEnterMethodName: EnterBoot
   OnLeaveMethodName: LeaveBoot
-  OnEnterFinishedTrigger: StartGame
+  OnEnterFinishedTrigger: StartMenu
+  OnLeaveTransition: fade
   Transitions:
-  - Trigger: StartGame
-    NextState: Game
+  - Trigger: StartMenu
+    NextState: Menu

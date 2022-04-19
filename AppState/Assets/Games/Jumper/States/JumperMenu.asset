@@ -10,16 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc38ac7a28c0a5c4ea1f6c5dc09225cb, type: 3}
-  m_Name: JumperGame
+  m_Name: JumperMenu
   m_EditorClassIdentifier: 
-  Name: Game
-  SceneToLoad: JumperGame
-  OnEnterMethodName: EnterGame
-  OnLeaveMethodName: LeaveGame
+  Name: Menu
+  SceneToLoad: JumperMenu
+  OnEnterMethodName: EnterMenu
+  OnLeaveMethodName: LeaveMenu
   OnEnterFinishedTrigger: 
   OnLeaveTransition: fade
   Transitions:
   - Trigger: StartGame
     NextState: Game
-  - Trigger: StartMenu
-    NextState: Menu
