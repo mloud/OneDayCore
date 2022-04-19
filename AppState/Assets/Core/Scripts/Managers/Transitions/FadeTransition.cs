@@ -13,7 +13,7 @@ namespace OneDay.Core.Effects
         {
             var sequence = DOTween.Sequence();
             image.enabled = true;
-            sequence.Join(image.DOFade(1.0f, duration));
+            sequence.Join(image.DOFade(1.0f, duration).From(0));
             yield return sequence.WaitForCompletion();
         }
 

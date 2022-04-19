@@ -62,6 +62,23 @@ namespace OneDay.Core.Tweens
                      tween.onComplete += () => onFinished();
                  }
                  break;
+             
+             case TweenType.Fade:
+                 target = customTarget != null ? (Transform) customTarget : config.TransformTarget;
+                 var fadeTween = target.GetComponent<CanvasGroup>().DOFade(config.ToFloatValue, config.Duration)
+                     .SetLoops(config.Loops, config.LoopType)
+                     .SetEase(config.EaseType)
+                     .SetDelay(config.Delay);
+
+                 if (config.UseFromValue)
+                 {
+                     fadeTween.From(config.FromFloatValue);
+                 }
+                 if (onFinished != null)
+                 {
+                     fadeTween.onComplete += () => onFinished();
+                 }
+                 break;
              default:
                  throw new ArgumentOutOfRangeException();
             }

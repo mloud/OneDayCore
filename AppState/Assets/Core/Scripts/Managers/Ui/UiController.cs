@@ -19,6 +19,7 @@ namespace OneDay.Core.Ui
         [Header("Root")]
         [SerializeField] GameObject root;
 
+        public UiManager UiManager => GetComponentInParent<UiManager>();
         protected T View { get; private set; }
 
         private Action onHideAction;

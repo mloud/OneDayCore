@@ -20,6 +20,8 @@ namespace OneDay.Core.Tweens
         public bool UseFromValue;
         public Vector3 ToVectorValue;
         public Vector3 FromValue;
+        public float FromFloatValue;
+        public float ToFloatValue;
         [Header("Target")]
         public Transform TransformTarget;
         public Transform ImageTarget;

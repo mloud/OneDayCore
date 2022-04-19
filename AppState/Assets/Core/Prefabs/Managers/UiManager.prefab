@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 886344562783221181}
   - component: {fileID: 3758917385391674416}
   - component: {fileID: 462006109481599749}
+  - component: {fileID: 7241152042199979242}
   m_Layer: 0
   m_Name: UiManager
   m_TagString: Untagged
@@ -62,6 +63,7 @@ MonoBehaviour:
   uiCanvas: {fileID: 4479049700510328153}
   defaultUiContainer: {fileID: 6442312708757899129}
   sceneUiImporter: {fileID: 1636658935520049668}
+  factory: {fileID: 7241152042199979242}
 --- !u!114 &-8282136364080343422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +200,19 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
+--- !u!114 &7241152042199979242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5425889470782125661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fdc260cf6fc4f269613a678b7c351b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  factoryDatabase: {fileID: 0}
 --- !u!1 &7022561748270134574
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,10 +8,12 @@ namespace OneDay.Core.Ui
 {
     public class UiManager : ABaseManager
     {
-        [SerializeField] Canvas uiCanvas;
-        [SerializeField] SceneUiContainer defaultUiContainer;
-        [SerializeField] SceneUiImporter sceneUiImporter;
-
+        public UiFactory Factory => factory;
+        
+        [SerializeField] private Canvas uiCanvas;
+        [SerializeField] private SceneUiContainer defaultUiContainer;
+        [SerializeField] private SceneUiImporter sceneUiImporter;
+        [SerializeField] private UiFactory factory;
 
         private Dictionary<string, List<Transform>> importedSceneUi;
 

@@ -4,6 +4,7 @@
     {
         LocalMove,
         Move,
-        Scale
+        Scale,
+        Fade
     }
 }
