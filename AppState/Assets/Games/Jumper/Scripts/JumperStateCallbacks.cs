@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using Core.Modules;
 using DG.Tweening;
 using OneDay.Core;
+using OneDay.Core.Data;
+using OneDay.Core.GeneralModules;
+using OneDay.Core.Modules;
 using OneDay.Core.States;
 using OneDay.Core.Ui;
 using OneDay.Core.Ui.Panels;
@@ -13,8 +16,31 @@ namespace OneDay.Games.Jumper
 {
     public class JumperStateCallbacks : ABaseMono
     {
-        public IEnumerator EnterBoot()
+        [SerializeField] private ProgressionSettings progressionWorldData; 
+        public IEnumerator EnterBoot(KeyValueData data)
         {
+            var dataManager = ODApp.Instance.ManagerHub.Get<DataManager>();
+
+            
+            // world
+            IHyperCasualWorldData wordProgressionData = progressionWorldData;
+            //user
+
+            // progression
+            const string ProgressionKey = "Progression";
+            HyperCasualProgressionData userProgressionData = null;
+            yield return ODApp.Instance.ManagerHub.Get<DataManager>().Load<HyperCasualProgressionData>(ProgressionKey, (data)=> userProgressionData = data);
+            userProgressionData.Save += () => dataManager.Save(ProgressionKey, userProgressionData);
+            
+            
+            // configure Modules here
+            var userModuleRegister = new ModuleRegister();
+            userModuleRegister.Register<HyperCasualProgressionModule>(
+                new HyperCasualProgressionModule(userProgressionData, wordProgressionData));
+            ODApp.Instance.ModuleHub.Register("user", userModuleRegister);
+            
+            
+            
             D.Info($"EnterBoot on scene {SceneManager.GetActiveScene().name}");
             var loadingPanel = ODApp.Instance.ManagerHub.Get<UiManager>().Get<LoadingPanel>("LoadingPanel");
             float value = 0;
@@ -35,31 +61,21 @@ namespace OneDay.Games.Jumper
             D.Info("LeaveConfig");
             yield break;
         }
-        public IEnumerator EnterMenu()
+        public IEnumerator EnterMenu(KeyValueData data)
         {
             Debug.Log("EnterMenu");
 
             void OnStageClicked(int index)
             {
-                ODApp.Instance.ManagerHub.Get<StateManager>().Trigger("StartGame");
+                ODApp.Instance.ManagerHub.Get<StateManager>()
+                    .Trigger("StartGame", KeyValueData.Create().Add("level", index));
             }
-            
-            var levelSelectionModel = new StageSelectionPanel.Model();
-            levelSelectionModel.Stages = new List<(bool finished, int stars, Action<int>)>
-            {
-                (false, -1,OnStageClicked),
-                (false, -1,OnStageClicked),
-                (false, -1,OnStageClicked),
-                (false, -1,OnStageClicked),
-                (false, -1,OnStageClicked),
-                (false, -1,OnStageClicked),
-                (false, -1,OnStageClicked),
-                (false, -1,OnStageClicked)
-            };
+
+            var progressionModule = ODApp.Instance.ModuleHub.Get("user").Get<HyperCasualProgressionModule>();
+            var levelSelectionModel = StageSelectionPanel.Model.From(progressionModule, OnStageClicked);
+           
             yield return ODApp.Instance.ManagerHub.Get<UiManager>().Show("LevelSelectionPanel",
                 KeyValueData.Create().Add("model", levelSelectionModel));
-            
-            yield break;
         }
 
         public IEnumerator LeaveMenu()
@@ -68,9 +84,10 @@ namespace OneDay.Games.Jumper
             yield break;
         }
         
-        public IEnumerator EnterGame()
+        public IEnumerator EnterGame(KeyValueData data)
         {
             Debug.Log("EnterGame");
+            ODApp.Instance.ManagerHub.Get<JumperGameManager>().StartLevel(data.Get<int>("level"));
             yield break;
         }
 

@@ -3,6 +3,8 @@ using System.Collections;
 using Cinemachine;
 using DG.Tweening;
 using OneDay.Core;
+using OneDay.Core.GeneralModules;
+using OneDay.Core.Inject;
 using OneDay.Core.States;
 using OneDay.Core.Ui;
 using OneDay.Games.Jumper.Ui;
@@ -17,6 +19,8 @@ namespace OneDay.Games.Jumper
         [SerializeField] private CinemachineVirtualCamera playerCam;
         [SerializeField] private CinemachineVirtualCamera winCam;
         [SerializeField] private CinemachineVirtualCamera startCam;
+        [SerializeField] private ProgressionSettings progessionSettings;
+        [InjectModule("user")] private HyperCasualProgressionModule ProgressionModule { get; set; }
         
         private enum State
         {
@@ -29,20 +33,29 @@ namespace OneDay.Games.Jumper
         private State state;
         protected override void InternalInitialize()
         {
-            SwitchToState(State.WarmingUp);
+            //SwitchToState(State.WarmingUp);
         }
 
         private CatchTrigger catcher;
         private SimpleCharacter player;
         private Level level;
+
+        private int levelIndex;
+
+        public void StartLevel(int levelIndex)
+        {
+            this.levelIndex = levelIndex;
+            SwitchToState(State.WarmingUp);
+        }
         
         private IEnumerator DoWarmUp()
         {
             state = State.WarmingUp;
-            
             startCam.enabled = true;
             // find level
-            level = GameObject.FindObjectOfType<Level>();
+
+            var levelPrefab = Instantiate(progessionSettings.Levels[levelIndex].LevelPrefab);
+            level = Instantiate(levelPrefab).GetComponent<Level>();
             
             // find player
             player = GameObject.FindObjectOfType<SimpleCharacter>();
@@ -52,13 +65,17 @@ namespace OneDay.Games.Jumper
             player.OnFinished += OnPlayerFinished;
             player.OnFailed += OnPlayerKilled;
             
+            // set win camera
+            winCam.transform.parent.position = level.transform.Find("Triggers").GetComponentInChildren<EndTrigger>()
+                .transform.position;
+            
             // catcher
             catcher = GameObject.FindObjectOfType<CatchTrigger>();
             catcher.MaxSpeed = level.LevelSettings.Speed;
             catcher.Speed = 0;
             
             ui.ProgressPanel.Set(0,0);
-            ui.StagePanel.SetStage(1);
+            ui.StagePanel.SetStage(levelIndex + 1);
             
             // wait
             yield return new WaitForSeconds(0.5f);
@@ -117,6 +134,7 @@ namespace OneDay.Games.Jumper
 
         private void OnPlayerFinished()
         {
+            ODApp.Instance.ModuleHub.Get("user").Get<HyperCasualProgressionModule>().FinishLevel(levelIndex, 3);
             SwitchToState(State.LevelWon);
         }
 

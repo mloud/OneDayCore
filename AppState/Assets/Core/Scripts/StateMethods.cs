@@ -1,9 +1,8 @@
 using OneDay.Core;
-using OneDay.Core.GeneralModules;
 using OneDay.Core.Ui;
 using System.Collections;
+using OneDay.Core.Modules;
 using UnityEngine;
-
 
 namespace OneDay.Example
 {

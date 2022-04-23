@@ -1,4 +1,7 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 using UnityEngine;
 
 namespace OneDay.Games.Jumper.Editor
@@ -30,6 +33,13 @@ namespace OneDay.Games.Jumper.Editor
             CreateObstacles(generatorSettings, levelSettings, levelRoot.transform.Find("Obstacles").gameObject);
             CreatePickables(generatorSettings, levelSettings, levelRoot.transform.Find("Pickables").gameObject);
             CreateTriggers(generatorSettings, levelSettings, levelRoot.transform.Find("Triggers").gameObject);
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            }
+#endif
         }
 
         private static void CreateLevelHierarchy(GameObject go, LevelSettings levelSettings)

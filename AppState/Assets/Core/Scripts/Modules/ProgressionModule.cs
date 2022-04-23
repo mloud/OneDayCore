@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OneDay.Core.GeneralModules
+namespace OneDay.Core.Modules
 {
     public interface IProgressionModule : IModule
     {

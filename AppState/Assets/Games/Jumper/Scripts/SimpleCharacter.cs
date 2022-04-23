@@ -17,13 +17,16 @@ namespace OneDay.Games.Jumper
         [SerializeField] private Vector3 playerMovementSpeed;
         [SerializeField] private bool AllowInAirJump;
         [SerializeField] private PlayerInput playerInput;
-        
+        [SerializeField] private float groundRayLength = 1.0f;
         [Range(0, 3)] [SerializeField] private float fallingMultiplier = 1;
 
         private Animator animator;
         private float ySpeed;
         private bool running;
         private bool finished;
+
+
+        private Jumper inJumper;
         protected override void Awake()
         {
             base.Awake();
@@ -51,25 +54,34 @@ namespace OneDay.Games.Jumper
         private void MovePlayer()
         {
             Vector3 moveVector = transform.TransformDirection(playerMovementSpeed) * Speed;
-
-            if (Input.GetKeyDown(KeyCode.Space))
+            bool isGrounded = IsGrounded();
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
             {
-                if (AllowInAirJump || character.isGrounded)
+                if (AllowInAirJump || isGrounded)
                 {
                     ySpeed = JumpForce;
                     animator.SetTrigger("Jump");
+                    Speed *= Mathf.Max(character.velocity.x / MaxSpeed, 0.9f);
                 }
             }
 
-            if (!character.isGrounded)
+            if (!isGrounded)
+            {
                 ySpeed += Physics.gravity.y * ((character.velocity.y < 0) ? fallingMultiplier : 1) * Time.deltaTime;
-
-
+            }
+            else if (!finished)
+            {
+                float acceleration = 2.0f;
+                Speed = Mathf.Lerp(Speed, MaxSpeed, Time.deltaTime * acceleration);
+            }
+            
             moveVector.y = ySpeed;
             character.Move(moveVector * Time.deltaTime);
 
-            animator.SetBool("IsGrounded", character.isGrounded);
+            animator.SetBool("IsGrounded", isGrounded);
             animator.SetFloat("Speed", character.velocity.x / MaxSpeed);
+            animator.SetFloat("VerticalSpeed", character.velocity.y);
+
         }
 
         private void OnTriggerEnter(Collider collision)
@@ -82,6 +94,24 @@ namespace OneDay.Games.Jumper
                 finished = true;
                 PlayWinSequence();
                 OnFinished?.Invoke();
+            }
+            else if (collision.transform.name == "JumperMain")
+            {
+                inJumper = collision.GetComponent<Jumper>();
+                Debug.Log("In jumper");
+                Time.timeScale = 0.5f;
+            }
+            
+        }
+
+        private void OnTriggerExit(Collider collision)
+        {
+            if (collision.transform.name == "JumperMain")
+            {
+                inJumper = null;
+                Debug.Log("Out of jumper");
+                Time.timeScale = 1.0f;
+
             }
         }
 
@@ -100,6 +130,32 @@ namespace OneDay.Games.Jumper
             DOTween.Sequence()
                 .AppendCallback(() => animator.SetTrigger("Kill"))
                 .SetDelay(0.5f);
+        }
+
+        private bool IsGrounded()
+        {
+            
+            var hits = Physics.RaycastAll(new Ray(transform.position, Vector3.down), groundRayLength);
+            foreach (var hit in hits)
+            {
+                if (hit.collider.name != "Jumper" && hit.collider.name != "JumperMain")
+                {
+                    return true;
+                }
+            }
+
+            return false;
+            //if (Physics.RaycastAll(new Ray(transform.position, Vector3.down), groundRayLength))
+            //{
+            //    return true;
+            //}
+
+            return false;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawRay(transform.position, Vector3.down * groundRayLength);
         }
     }
 }

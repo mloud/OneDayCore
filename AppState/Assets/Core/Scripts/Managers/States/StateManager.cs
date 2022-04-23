@@ -22,7 +22,7 @@ namespace OneDay.Core.States
 
             SceneManager.sceneLoaded += OnSceneLoaded;
             
-            StartCoroutine(TriggerCoroutine("start"));
+            StartCoroutine(TriggerCoroutine("start", null));
         }
 
         protected override void InternalRelease()
@@ -30,13 +30,14 @@ namespace OneDay.Core.States
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
-        public void Trigger(string triggerName)
+        public void Trigger(string triggerName, KeyValueData param = null)
         {
-            StartCoroutine(TriggerCoroutine(triggerName));
+            StartCoroutine(TriggerCoroutine(triggerName, param));
         }
         
-        private IEnumerator TriggerCoroutine(string triggerName)
+        private IEnumerator TriggerCoroutine(string triggerName, KeyValueData param)
         {
+            param ??= new KeyValueData();
             Debug.Assert(!IsTransiting, $"Transition in progress when triggering {triggerName}");
             
             D.Info($"Triggering trigger {triggerName}");
@@ -91,7 +92,7 @@ namespace OneDay.Core.States
                 if (stateMethodListener != null)
                 {
                     D.Info($"Starting enter method in state {CurrentState.Name}");
-                    yield return stateMethodListener.StartCoroutine(CurrentState.OnEnterMethodName);
+                    yield return stateMethodListener.StartCoroutine(CurrentState.OnEnterMethodName, param);
                 }
 
                 yield return ODApp.Instance.ManagerHub.Get<TransitionManager>().Hide();
@@ -124,7 +125,7 @@ namespace OneDay.Core.States
             if (ActiveTrigger != null && string.IsNullOrEmpty(LoadingScene))
             {
                 D.Info($"New trigger {ActiveTrigger} detected - starting Trigger new state sequence");
-                StartCoroutine(TriggerCoroutine(ActiveTrigger));
+                StartCoroutine(TriggerCoroutine(ActiveTrigger, null));
                 ActiveTrigger = null;
             }
         }
