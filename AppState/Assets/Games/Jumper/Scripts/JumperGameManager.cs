@@ -146,6 +146,7 @@ namespace OneDay.Games.Jumper
         private IEnumerator DoLevelWon()
         {
             winCam.enabled = true;
+            playerCam.enabled = false;
             yield return catcher.Vanish();
             yield return ui.ProgressPanel.Hide();
             yield return ui.StagePanel.Hide();

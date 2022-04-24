@@ -7676,7 +7676,7 @@ CharacterController:
   m_Radius: 0.11
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &62714177
@@ -7692,12 +7692,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 62714178}
-  Speed: 4
-  JumpForce: 6
+  MaxSpeed: 3.5
+  Speed: 3.5
+  JumpForce: 7
   playerMovementSpeed: {x: 0, y: 0, z: 0}
   AllowInAirJump: 0
   playerInput: {fileID: 1918410373946526927}
-  fallingMultiplier: 2.5
+  groundRayLength: 1
+  fallingMultiplier: 5
 --- !u!114 &1918410373946526927
 MonoBehaviour:
   m_ObjectHideFlags: 0
