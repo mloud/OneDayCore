@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Length: 30
   ObstacleDistance: {x: 6, y: 7}
-  Speed: 3.8
+  Speed: 3.2
   Pickables: 0
   levelGeneratorSettings: {fileID: 11400000, guid: af8d70873de331e4880e4d5e4faac1c4, type: 2}
   LevelPrefab: {fileID: 3932785242681277583, guid: 4414a79bfc5015e48a947a4e44044bf5, type: 3}
