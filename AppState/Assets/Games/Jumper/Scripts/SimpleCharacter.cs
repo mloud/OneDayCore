@@ -18,15 +18,16 @@ namespace OneDay.Games.Jumper
         [SerializeField] private bool AllowInAirJump;
         [SerializeField] private PlayerInput playerInput;
         [SerializeField] private float groundRayLength = 1.0f;
-        [Range(0, 3)] [SerializeField] private float fallingMultiplier = 1;
+        [Range(0, 10)] [SerializeField] private float fallingMultiplier = 1;
 
         private Animator animator;
         private float ySpeed;
         private bool running;
         private bool finished;
 
-
-        private Jumper inJumper;
+        private float jumpTimerStartTime;
+        private bool preparingToJump; 
+       
         protected override void Awake()
         {
             base.Awake();
@@ -55,25 +56,45 @@ namespace OneDay.Games.Jumper
         {
             Vector3 moveVector = transform.TransformDirection(playerMovementSpeed) * Speed;
             bool isGrounded = IsGrounded();
+            
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+            {
+                jumpTimerStartTime = Time.unscaledTime;
+                preparingToJump = true;
+            }
+            else if (Input.GetKey(KeyCode.Space) || Input.GetMouseButton(0))
+            {
+                // slow down
+                float dec = 1.0f;
+                Speed = Mathf.Lerp(Speed, MaxSpeed * 0.5f, Time.deltaTime * dec);
+            }
+            else if (Input.GetKeyUp(KeyCode.Space) || Input.GetMouseButtonUp(0))
             {
                 if (AllowInAirJump || isGrounded)
                 {
-                    ySpeed = JumpForce;
+                    const float MaxTime = 0.3f;
+                    float MinJumpForce = JumpForce * 0.5f;
+                    var c = Mathf.Clamp01((Time.unscaledTime - jumpTimerStartTime) / MaxTime);
+                    ySpeed = Math.Max(JumpForce * c, MinJumpForce);
                     animator.SetTrigger("Jump");
-                    Speed *= Mathf.Max(character.velocity.x / MaxSpeed, 0.9f);
                 }
-            }
 
+                preparingToJump = false;
+            }
+            
+            // gravity
             if (!isGrounded)
             {
                 ySpeed += Physics.gravity.y * ((character.velocity.y < 0) ? fallingMultiplier : 1) * Time.deltaTime;
             }
-            else if (!finished)
+            // accel 
+            else if (!finished && !preparingToJump)
             {
-                float acceleration = 2.0f;
+                float acceleration = 10.0f;
                 Speed = Mathf.Lerp(Speed, MaxSpeed, Time.deltaTime * acceleration);
             }
+            
+            D.Info($"speed: {Speed}");
             
             moveVector.y = ySpeed;
             character.Move(moveVector * Time.deltaTime);
@@ -92,26 +113,8 @@ namespace OneDay.Games.Jumper
             if (collision.transform.name == "EndTrigger")
             {
                 finished = true;
-                PlayWinSequence();
                 OnFinished?.Invoke();
-            }
-            else if (collision.transform.name == "JumperMain")
-            {
-                inJumper = collision.GetComponent<Jumper>();
-                Debug.Log("In jumper");
-                Time.timeScale = 0.5f;
-            }
-            
-        }
-
-        private void OnTriggerExit(Collider collision)
-        {
-            if (collision.transform.name == "JumperMain")
-            {
-                inJumper = null;
-                Debug.Log("Out of jumper");
-                Time.timeScale = 1.0f;
-
+                PlayWinSequence();
             }
         }
 
@@ -128,7 +131,10 @@ namespace OneDay.Games.Jumper
         private void PlayKilledSequence()
         {
             DOTween.Sequence()
-                .AppendCallback(() => animator.SetTrigger("Kill"))
+                .AppendCallback(() =>
+                {
+                    animator.SetTrigger("Kill");
+                })
                 .SetDelay(0.5f);
         }
 
